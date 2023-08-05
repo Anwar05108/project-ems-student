@@ -1,54 +1,38 @@
-
-// app.js (or your main application file)
+// app.js
 const express = require('express');
 const app = express();
+const signupRouter = require('./routes/signup');
+const signinRouter = require('./routes/signin');
+const sequelize = require('./config/database'); // Import the Sequelize connection
+require('dotenv').config(); // Load environment variables from .env
 
-// Import the PostgreSQL library
-const { Client } = require('pg');
+// Import the Student model
+const Student = require('./models/student');
 
-// Load environment variables from .env file
-require('dotenv').config();
+// Test the database connection
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+})();
 
-// Database connection configuration
-const dbConfig = {
-    user: process.env.DB_USER,     // Your PostgreSQL database username
-    password: process.env.DB_PASSWORD, // Your PostgreSQL database password
-    host: process.env.DB_HOST,     // Your PostgreSQL database host
-    port: process.env.DB_PORT,     // Your PostgreSQL database port
-    database: process.env.DB_NAME, // Your PostgreSQL database name
-  };
+// Middleware
+app.use(express.json());
 
-// Create a new PostgreSQL client
-const client = new Client(dbConfig);
+// Routes
+app.use('/signup', signupRouter);
+app.use('/signin', signinRouter);
 
-// Connect to the database
-client.connect()
-  .then(() => {
-    console.log('Connected to the database');
-  })
-  .catch((err) => {
-    console.error('Error connecting to the database:', err);
+// Other routes and middleware...
+
+const port = process.env.PORT || 3000;
+sequelize.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
   });
-
-// Route to get all students
-app.get('/students', (req, res) => {
-  // Query to fetch all students from the "student" table
-  const query = 'SELECT * FROM student';
-
-  // Execute the query
-  client.query(query)
-    .then((result) => {
-      // Send the student data as the response
-      res.json(result.rows);
-    })
-    .catch((err) => {
-      console.error('Error executing the query:', err);
-      res.status(500).json({ error: 'An error occurred while fetching students.' });
-    });
-});
-
-// Start the server
-const port = 3000; // Replace this with your desired port number
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+}).catch((err) => {
+  console.error('Error syncing database:', err);
 });
