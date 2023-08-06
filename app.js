@@ -3,13 +3,12 @@ const express = require('express');
 const app = express();
 const signupRouter = require('./routes/signup');
 const signinRouter = require('./routes/signin');
-const sequelize = require('./config/database'); // Import the Sequelize connection
-require('dotenv').config(); // Load environment variables from .env
+const examRouter = require('./routes/exam'); // Import the exam routes
+const sequelize = require('./config/database');
+require('dotenv').config();
 
-// Import the Student model
 const Student = require('./models/student');
 
-// Test the database connection
 (async () => {
   try {
     await sequelize.authenticate();
@@ -19,12 +18,12 @@ const Student = require('./models/student');
   }
 })();
 
-// Middleware
 app.use(express.json());
 
 // Routes
-app.use('/signup', signupRouter);
-app.use('/signin', signinRouter);
+app.use('/api/student/signup', signupRouter);
+app.use('/api/student/signin', signinRouter);
+app.use('/api/student/exam/mcq', examRouter); // Use the exam routes
 
 // Other routes and middleware...
 
