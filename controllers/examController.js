@@ -64,6 +64,7 @@ exports.submitExamAnswers = async (req, res) => {
       }
   
       // Save the student's score to the database or use it as needed
+      
   
       res.status(200).json({ score });
     } catch (err) {
