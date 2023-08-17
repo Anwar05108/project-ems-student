@@ -46,7 +46,7 @@ app.use('/api/student/exam/mcq', examRouter); // Use the exam routes
 app.use('/api/student/courses',courseRouter);
 // Other routes and middleware...
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 sequelize.sync().then(() => {
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
