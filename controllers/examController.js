@@ -2,6 +2,7 @@
 const Exam = require('../models/exam');
 const Question = require('../models/question');
 const QuestionExam = require('../models/question_exam');
+const ExamStudent = require('../models/exam_student');
 
 exports.getExamDetails = async (req, res) => {
   try {
@@ -63,8 +64,32 @@ exports.submitExamAnswers = async (req, res) => {
         }
       }
   
-      // Save the student's score to the database or use it as needed
-      
+     
+       // Save the student's score to the database
+       console.log('checking session')
+       console.log(req.session.studentId);
+       console.log(req.session.studentName);
+    const  stu_id  = req.session.studentId; // Assuming you have the student's ID from authentication middleware
+    const obtainedMarks = score;
+
+    const examStudentEntry = await ExamStudent.findOne({
+      where: { exam_exam_id: examId, student_stu_id: stu_id },
+    });
+
+    if (examStudentEntry) {
+      // If the entry already exists, update the obtained_marks value
+      examStudentEntry.obtained_marks = obtainedMarks;
+      await examStudentEntry.save();
+    } else {
+      // If the entry does not exist, create a new entry
+      await ExamStudent.create({
+        exam_exam_id: examId,
+        student_stu_id: stu_id,
+        obtained_marks: obtainedMarks,
+      });
+    }
+     
+
   
       res.status(200).json({ score });
     } catch (err) {

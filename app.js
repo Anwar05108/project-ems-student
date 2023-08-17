@@ -4,8 +4,26 @@ const app = express();
 const signupRouter = require('./routes/signup');
 const signinRouter = require('./routes/signin');
 const examRouter = require('./routes/exam'); // Import the exam routes
+const courseRouter = require('./routes/course');
 const sequelize = require('./config/database');
+const session = require('express-session');
 require('dotenv').config();
+
+
+
+// Session middleware
+app.use(
+  session({
+    secret: 'secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false,
+      httpOnly: true,
+      maxAge: 3600000,
+    },
+  })
+);
 
 const Student = require('./models/student');
 
@@ -25,6 +43,7 @@ app.use('/api/student/signup', signupRouter);
 app.use('/api/student/signin', signinRouter);
 app.use('/api/student/exam/mcq', examRouter); // Use the exam routes
 
+app.use('/api/student/courses',courseRouter);
 // Other routes and middleware...
 
 const port = process.env.PORT || 3000;

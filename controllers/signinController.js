@@ -1,4 +1,3 @@
-// controllers/signinController.js
 const bcrypt = require('bcrypt');
 const Student = require('../models/student');
 
@@ -26,7 +25,18 @@ exports.signin = async (req, res) => {
       return res.status(401).json({ error: 'Invalid password' });
     }
 
-    // Password is valid, student is authenticated, you can create a session or JWT token here if needed
+    // Password is valid, student is authenticated
+    // Now, you can set the student's information in the session
+    console.log('Student authenticated:', student.stu_id);
+    req.session.studentId = student.stu_id;
+    req.session.studentName = student.name;
+
+    // res.cookie('sessionID', req.sessionID, {
+    //   httpOnly: true,
+    //   maxAge: 3600000, 
+    //   // secure: true,
+    // });
+
     res.status(200).json({ message: 'Authentication successful', data: student });
   } catch (err) {
     console.error('Error in signin:', err);
