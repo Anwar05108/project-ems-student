@@ -17,7 +17,7 @@ yarn-error.log*
 coverage
 
 # dotenv environment variable file (make sure to include this if you're using dotenv for configuration)
-.env
+# .env
 
 # Production build output
 build/

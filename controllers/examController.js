@@ -27,7 +27,10 @@ exports.getExamDetails = async (req, res) => {
       where: { question_id: questionIds },
     });
 
-    res.status(200).json({ exam, questions });
+    // check the type of the question. keep only mcq type questions
+    const mcqQuestions = questions.filter((question) => question.type === 'MCQ');
+
+    res.status(200).json({ exam, mcqQuestions });
   } catch (err) {
     console.error('Error in fetching exam details:', err);
     res.status(500).json({ error: 'Internal server error' });

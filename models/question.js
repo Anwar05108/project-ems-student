@@ -35,6 +35,10 @@ Question.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     sequelize,

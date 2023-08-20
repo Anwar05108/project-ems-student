@@ -28,9 +28,6 @@ Exam.init(
     duration: {
       type: DataTypes.INTEGER,
     },
-    subject: {
-      type: DataTypes.STRING,
-    },
     course_course_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
