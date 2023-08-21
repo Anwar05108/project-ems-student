@@ -32,6 +32,10 @@ Student.init(
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     sequelize,

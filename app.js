@@ -1,5 +1,6 @@
 // app.js
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const signupRouter = require('./routes/signup');
 const signinRouter = require('./routes/signin');
@@ -9,7 +10,7 @@ const sequelize = require('./config/database');
 const session = require('express-session');
 require('dotenv').config();
 
-
+app.use(cors());
 
 // Session middleware
 app.use(
