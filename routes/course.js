@@ -16,4 +16,7 @@ router.get('/:courseId', courseController.getCourseDetails);
 
 router.get('/getallCoursesbySubject', courseController.getAllCoursesBySubject);
 
+// route to get all enrolled courses of a student
+router.get('/getallEnrolledCourses', courseController.getAllEnrolledCourses);
+
 module.exports = router;

@@ -136,3 +136,23 @@ exports.enrollStudentToCourse = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+exports.getAllEnrolledCourses = async (req, res) => {
+    try {
+        //    get student id from session
+        const studentId = req.session.studentId;
+
+        // Fetch course details
+        const courses = await StudentCourse.findAll({
+            where: { student_stu_id: studentId },
+        });
+
+        if (!courses) {
+            return res.status(404).json({ error: 'Courses not found' });
+        }
+
+        res.status(200).json({ courses });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
