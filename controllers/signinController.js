@@ -3,15 +3,16 @@ const Student = require('../models/student');
 
 exports.signin = async (req, res) => {
   try {
-    const { stu_id, password } = req.body;
+    const { email, password } = req.body;
 
+    console.log(email);
     // Validate input data (check for missing fields)
-    if (!stu_id || !password) {
+    if (!email || !password) {
       return res.status(400).json({ error: 'Student ID and password are required' });
     }
 
     // Find the student by "stu_id"
-    const student = await Student.findOne({ where: { stu_id } });
+    const student = await Student.findOne({ where: { email } });
 
     // Check if the student exists
     if (!student) {

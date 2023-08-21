@@ -1,5 +1,6 @@
 // app.js
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const signupRouter = require('./routes/signup');
 const signinRouter = require('./routes/signin');
@@ -12,7 +13,7 @@ app.use(cors());
 
 require('dotenv').config();
 
-
+app.use(cors());
 
 // Session middleware
 app.use(

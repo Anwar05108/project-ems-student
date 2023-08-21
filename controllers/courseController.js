@@ -105,9 +105,10 @@ exports.enrollStudentToCourse = async (req, res) => {
     try {
         // take course id from body
         const  courseId  = req.body.courseId;
-        console.log(req.body);
+        //console.log(req.body);
         console.log(courseId);
         const studentId = req.session.studentId;
+        //console.log(req.session);
         console.log(studentId);
 
         // check if student is already enrolled
@@ -121,14 +122,36 @@ exports.enrollStudentToCourse = async (req, res) => {
             return res.status(400).json({ error: 'Student already enrolled' });
         }
 
+        //console.log("debug");
         // enroll student to course
         const student_course_enrollment = await StudentCourse.create({
-            student_student_id: studentId,
+            student_stu_id: studentId,
             course_course_id: courseId,
             rating: 0,
         });
 
         res.status(200).json({ student_course_enrollment });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+exports.getAllEnrolledCourses = async (req, res) => {
+    try {
+        //    get student id from session
+        const studentId = req.session.studentId;
+
+        // Fetch course details
+        const courses = await StudentCourse.findAll({
+            where: { student_stu_id: studentId },
+        });
+
+        if (!courses) {
+            return res.status(404).json({ error: 'Courses not found' });
+        }
+
+        res.status(200).json({ courses });
     } catch (err) {
         res.status(500).json({ error: 'Internal server error' });
     }
