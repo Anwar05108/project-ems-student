@@ -7,6 +7,9 @@ const examRouter = require('./routes/exam'); // Import the exam routes
 const courseRouter = require('./routes/course');
 const sequelize = require('./config/database');
 const session = require('express-session');
+const cors = require('cors');
+app.use(cors());
+
 require('dotenv').config();
 
 

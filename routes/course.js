@@ -14,6 +14,6 @@ router.post('/enroll', courseController.enrollStudentToCourse);
 // Route to get course details by course ID
 router.get('/:courseId', courseController.getCourseDetails);
 
-router.get('/getallCoursesbySubject', courseController.getAllCoursesBySubject);
+// router.get('/getallCoursesbySubject', courseController.getAllCoursesBySubject);
 
 module.exports = router;

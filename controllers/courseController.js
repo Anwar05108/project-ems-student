@@ -76,28 +76,28 @@ exports.getAllCoursesByQuery = async (req, res) => {
 
 // get all courses for a student by  subject
 
-exports.getAllCoursesBySubject = async (req, res) => {
-    try {
-        //    get student id from session
-        const studentId = req.session.studentId;
-        const student = await Student.findByPk(studentId);
-        const class_of_student = student.class;
-        const { subject } = req.params;
+// exports.getAllCoursesBySubject = async (req, res) => {
+//     try {
+//         //    get student id from session
+//         const studentId = req.session.studentId;
+//         const student = await Student.findByPk(studentId);
+//         const class_of_student = student.class;
+//         const { subject } = req.params;
 
-        // Fetch course details
-        const courses = await Course.findAll({
-            where: { class: class_of_student, subject: subject },
-        });
+//         // Fetch course details
+//         const courses = await Course.findAll({
+//             where: { class: class_of_student, subject: subject },
+//         });
 
-        if (!courses) {
-            return res.status(404).json({ error: 'Courses not found' });
-        }
+//         if (!courses) {
+//             return res.status(404).json({ error: 'Courses not found' });
+//         }
 
-        res.status(200).json({ courses });
-    } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
+//         res.status(200).json({ courses });
+//     } catch (err) {
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// }
 
 // enroll a student to a course
 
@@ -111,15 +111,15 @@ exports.enrollStudentToCourse = async (req, res) => {
         console.log(studentId);
 
         // check if student is already enrolled
-        // const student_course = await StudentCourse.findOne({
-        //     where: { student_stu_id: studentId, course_course_id: courseId },
-        // });
+        const student_course = await StudentCourse.findOne({
+            where: { student_stu_id: studentId, course_course_id: courseId },
+        });
 
-        // console.log(student_course);
+        console.log(student_course);
 
-        // if (student_course) {
-        //     return res.status(400).json({ error: 'Student already enrolled' });
-        // }
+        if (student_course) {
+            return res.status(400).json({ error: 'Student already enrolled' });
+        }
 
         // enroll student to course
         const student_course_enrollment = await StudentCourse.create({
