@@ -69,10 +69,13 @@ exports.submitExamAnswers = async (req, res) => {
   
      
        // Save the student's score to the database
-       console.log('checking session')
-       console.log(req.session.studentId);
-       console.log(req.session.studentName);
-    const  stu_id  = req.session.studentId; // Assuming you have the student's ID from authentication middleware
+      //  console.log('checking session')
+      //  console.log(req.session.studentId);
+      //  console.log(req.session.studentName);
+      //  get the student id from the token
+      const stu_id = req.user.studentId;
+      console.log('from token',stu_id);
+    // const  stu_id  = req.session.studentId; // Assuming you have the student's ID from authentication middleware
     const obtainedMarks = score;
 
     const examStudentEntry = await ExamStudent.findOne({

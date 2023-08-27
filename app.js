@@ -8,26 +8,34 @@ const examRouter = require('./routes/exam'); // Import the exam routes
 const courseRouter = require('./routes/course');
 const sequelize = require('./config/database');
 const session = require('express-session');
-const cors = require('cors');
-app.use(cors());
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Replace with your frontend's origin
+  credentials: true, // Allow credentials (cookies)
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+
 
 require('dotenv').config();
 
-app.use(cors());
 
 // Session middleware
-app.use(
-  session({
-    secret: 'secret_key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false,
-      httpOnly: true,
-      maxAge: 3600000,
-    },
-  })
-);
+// app.use(
+//   session({
+//     secret: 'secret_key',
+//     resave: true,
+//     saveUninitialized: true,
+//     cookie: {
+//       secure: false,
+//       httpOnly: false,
+//       maxAge: 3600000,
+//     },
+//   })
+// );
 
 const Student = require('./models/student');
 
