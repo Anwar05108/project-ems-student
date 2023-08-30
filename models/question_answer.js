@@ -1,19 +1,41 @@
-// CREATE TABLE public.question_answer (
-//     question_id SERIAL PRIMARY KEY,
-//     answer_script_url TEXT NOT NULL
+// CREATE TABLE question_answer (
+//     student_id INT,
+//     exam_id INT,
+//     answer_script_url TEXT
 // );
+
 // write a model for question_answer
 
-const { Sequelize, DataTypes } = require('sequelize');
-const db = require('../config/database');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const QuestionAnswer = db.define('question_answer', {
-    question_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
+class QuestionAnswer extends Model { }
+
+QuestionAnswer.init(
+    {
+        student_id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            allowNull: false,
+        },
+        exam_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        answer_script_url: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
-    answer_script_url: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-});
+    {
+        sequelize,
+        modelName: 'QuestionAnswer',
+        tableName: 'question_answer',
+        timestamps: false,
+
+    }
+
+);
+
+
+module.exports = QuestionAnswer;

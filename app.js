@@ -53,7 +53,8 @@ app.use(express.json());
 // Routes
 app.use('/api/student/signup', signupRouter);
 app.use('/api/student/signin', signinRouter);
-app.use('/api/student/exam/mcq', examRouter); // Use the exam routes
+app.use('/api/student/exam', examRouter); // Use the exam routes
+
 
 app.use('/api/student/courses',courseRouter);
 // Other routes and middleware...
