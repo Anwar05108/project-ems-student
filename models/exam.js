@@ -11,16 +11,9 @@ Exam.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    class: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     total_marks: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
-    },
-    time: {
-      type: DataTypes.DATE,
     },
     name: {
       type: DataTypes.STRING(100),
@@ -31,6 +24,15 @@ Exam.init(
     course_course_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+
+      references: {
+        model: 'course',
+        key: 'course_id',
+
+      },
+    },
+    exam_type: {
+      type: DataTypes.STRING(100),
     },
   },
   {

@@ -30,7 +30,7 @@ QuestionAnswer.init(
     {
         sequelize,
         modelName: 'QuestionAnswer',
-        tableName: 'question_answer',
+        tableName: 'exam_answer',
         timestamps: false,
 
     }
