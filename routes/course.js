@@ -12,7 +12,7 @@ router.get('/getallCoursesbyclass', courseController.getAllCoursesByClass);
 router.get('/getallCoursesbyquery/:query', courseController.getAllCoursesByQuery);
 
 // Route to enroll in a course by course ID
-router.post('/enroll', courseController.enrollStudentToCourse);
+router.post('/enroll',jwtAuthMiddleware, courseController.enrollStudentToCourse);
 
 // Route to get course details by course ID
 router.get('/:courseId', courseController.getCourseDetails);

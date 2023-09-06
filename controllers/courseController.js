@@ -144,9 +144,23 @@ exports.enrollStudentToCourse = async (req, res) => {
         const  courseId  = req.body.courseId;
         //console.log(req.body);
         console.log(courseId);
-        const studentId = req.session.studentId;
-        //console.log(req.session);
-        console.log(studentId);
+        const studentId = req.user.studentId;
+        // check if course exists
+        const course = await Course.findByPk(courseId);
+
+        if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+
+        // check if the class of the course matches the student's class
+        const student = await Student.findByPk(studentId);
+        const class_of_student = student.class;
+
+        if (class_of_student !== course.class) {
+            return res.status(400).json({ error: 'Course does not match student class' });
+        }
+
+        
 
         // check if student is already enrolled
         const student_course = await StudentCourse.findOne({
