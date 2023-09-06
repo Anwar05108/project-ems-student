@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 exports.getAllEnrolledCourses = async (req, res) => {
     try {
         //    get student id from token
+        console.log("hello from get all enrolled courses");
         const studentId = req.user.studentId;
 
         // Fetch course details
@@ -28,7 +29,7 @@ exports.getAllEnrolledCourses = async (req, res) => {
         });
         //console.log(courses);
 
-
+        // console.log(coursesWithDetails);
 
         res.status(200).json({ coursesWithDetails });
     } catch (err) {
@@ -59,7 +60,7 @@ exports.getAllCoursesByClass = async (req, res) => {
     try {
         //    get student id from session
         console.log("debug");
-        const studentId = req.session.studentId;
+        const studentId = req.user.studentId;
         console.log(studentId);
         const student = await Student.findByPk(studentId);
         const class_of_student = student.class;
@@ -160,7 +161,7 @@ exports.enrollStudentToCourse = async (req, res) => {
             return res.status(400).json({ error: 'Course does not match student class' });
         }
 
-        
+
 
         // check if student is already enrolled
         const student_course = await StudentCourse.findOne({

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 // Middleware to verify JWT tokens
 const jwtAuthMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // Assuming the token is sent in the 'Authorization' header as 'Bearer <token>'
-  console.log(token);
+  // console.log(token);
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
