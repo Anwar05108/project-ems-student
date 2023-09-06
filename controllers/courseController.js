@@ -3,6 +3,40 @@ const StudentCourse = require('../models/student_course');
 const Student = require('../models/student');
 const { Op } = require('sequelize');
 
+exports.getAllEnrolledCourses = async (req, res) => {
+    try {
+        //    get student id from token
+        const studentId = req.user.studentId;
+
+        // Fetch course details
+        const courses = await StudentCourse.findAll({
+            where: { student_stu_id: studentId },
+        });
+
+        if (!courses) {
+            return res.status(404).json({ error: 'Courses not found' });
+        }
+        // now get course details from course table
+        //console.log(courses);
+        var courseIds = [];
+        for (var i = 0; i < courses.length; i++) {
+            courseIds.push(courses[i].course_course_id);
+        }
+        //console.log(courseIds);
+        const coursesWithDetails = await Course.findAll({
+            where: { course_id: courseIds },
+        });
+        //console.log(courses);
+
+
+
+        res.status(200).json({ coursesWithDetails });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server2 error' });
+    }
+}
+
+
 exports.getCourseDetails = async (req, res) => {
     try {
         const { courseId } = req.params;
@@ -73,6 +107,9 @@ exports.getAllCoursesByQuery = async (req, res) => {
     }
 }
 
+// get all enrolled courses of a student, use jwt
+
+
 
 // get all courses for a student by  subject
 
@@ -137,22 +174,3 @@ exports.enrollStudentToCourse = async (req, res) => {
     }
 }
 
-exports.getAllEnrolledCourses = async (req, res) => {
-    try {
-        //    get student id from session
-        const studentId = req.session.studentId;
-
-        // Fetch course details
-        const courses = await StudentCourse.findAll({
-            where: { student_stu_id: studentId },
-        });
-
-        if (!courses) {
-            return res.status(404).json({ error: 'Courses not found' });
-        }
-
-        res.status(200).json({ courses });
-    } catch (err) {
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}

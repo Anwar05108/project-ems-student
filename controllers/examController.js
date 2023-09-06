@@ -149,24 +149,25 @@ exports.submitWrittenExamAnswers = async (req, res) => {
   console.log(stu_id);
   console.log(answerScriptUrl);
   try {
-    //before inserting check if the exam_id and student_id is present if prsent just update  the answer script url
-    // const questionAnserEntry = await QuestionAnswer.findOne({
-    //   where: { exam_id: examId, student_id: stu_id },
-    // });
+    // before inserting check if the exam_id and student_id is present if prsent just update  the answer script url
+    const questionAnserEntry = await QuestionAnswer.findOne({
+      where: { exam_id: examId, student_id: stu_id },
+    });
 
-    // if (questionAnserEntry) {
-    //   // If the entry already exists, update the answer script url
-    //   questionAnserEntry.answer_script_url = answerScriptUrl;
-    //   await questionAnserEntry.save();
-    // // }
-    // else {
+    if (questionAnserEntry) {
+      // If the entry already exists, update the answer script url
+      questionAnserEntry.answer_script_url = answerScriptUrl;
+      await questionAnserEntry.save();
+    }
+    else {
       // If the entry does not exist, create a new entry
       await QuestionAnswer.create({
         exam_id: examId,
         student_id: stu_id,
         answer_script_url: answerScriptUrl,
       });
-    // }
+    }
+
     res.status(200).json({ message: 'Answer script url saved successfully' });
   } catch (err) {
     console.error('Error in submitting exam answers:', err);

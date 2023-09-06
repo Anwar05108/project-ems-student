@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/courseController');
+const jwtAuthMiddleware = require('../middleware/jwtAuth');
+
+router.get('/getallEnrolledCourses',jwtAuthMiddleware, courseController.getAllEnrolledCourses);
 
 // Route to get course details by course ID
 router.get('/getallCoursesbyclass', courseController.getAllCoursesByClass);
@@ -17,6 +20,5 @@ router.get('/:courseId', courseController.getCourseDetails);
 // router.get('/getallCoursesbySubject', courseController.getAllCoursesBySubject);
 
 // route to get all enrolled courses of a student
-router.get('/getallEnrolledCourses', courseController.getAllEnrolledCourses);
 
 module.exports = router;
