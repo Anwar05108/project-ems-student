@@ -85,7 +85,14 @@ exports.submitExamAnswers = async (req, res) => {
 
     if (examStudentEntry) {
       // If the entry already exists, update the obtained_marks value
-      examStudentEntry.obtained_marks = obtainedMarks;
+      // check if the marks is negative then add with the obtained marks
+      if(examStudentEntry.obtained_marks < 0){
+        examStudentEntry.obtained_marks = examStudentEntry.obtained_marks + obtainedMarks;
+      }
+      else{
+        examStudentEntry.obtained_marks = obtainedMarks;
+      }
+        
       await examStudentEntry.save();
     } else {
       // If the entry does not exist, create a new entry

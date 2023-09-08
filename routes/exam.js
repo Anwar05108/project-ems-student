@@ -4,6 +4,7 @@ const router = express.Router();
 const examController = require('../controllers/examController');
 const jwtAuthMiddleware = require('../middleware/jwtAuth');
 
+router.post('/:examId/deductMarks',jwtAuthMiddleware, examController.deductMarks);
 // Route to get exam details and questions
 router.get('/mcq/:examId', examController.getExamDetails);
 
