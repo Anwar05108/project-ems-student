@@ -22,6 +22,19 @@ router.get('/:courseId', courseController.getCourseDetails);
 
 // router.get('/getallCoursesbySubject', courseController.getAllCoursesBySubject);
 
-// route to get all enrolled courses of a student
+// route to get all exams of a course
+router.get('/:courseId/getallExams', jwtAuthMiddleware, courseController.getAllExams);
+
+// route to load a written exam
+router.get('/:courseId/exams/:examId/loadWrittenExam', jwtAuthMiddleware, courseController.getWrittenExamDetails);
+
+// route to submit the written answer
+router.post('/:courseId/exams/:examId/submitWrittenAnswer', jwtAuthMiddleware, courseController.submitWrittenExamAnswers);
+
+// route to load a mcq exam
+router.get('/:courseId/exams/:examId/loadMcqExam', jwtAuthMiddleware, courseController.getMcqExamDetails);
+
+// route to submit the mcq answer
+router.post('/:courseId/exams/:examId/submitMcqAnswer', jwtAuthMiddleware, courseController.submitMcqExamAnswers);
 
 module.exports = router;
