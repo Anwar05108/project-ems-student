@@ -195,7 +195,7 @@ exports.deductMarks = async (req, res) => {
     });
     if (examStudentEntry) {
       // If the entry already exists, update the obtained_marks value
-      examStudentEntry.obtained_marks = 0 - marks;
+      examStudentEntry.obtained_marks = examStudentEntry.obtainedMarks - marks;
       await examStudentEntry.save();
     }
     else {
