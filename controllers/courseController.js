@@ -35,7 +35,7 @@ exports.getAllEnrolledCourses = async (req, res) => {
         });
         //console.log(courses);
 
-        console.log(coursesWithDetails);
+        // console.log(coursesWithDetails);
 
         res.status(200).json({ coursesWithDetails });
     } catch (err) {
@@ -478,3 +478,88 @@ exports.submitMcqExamAnswers = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+exports.getAllExamsAppeared = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+
+        // Fetch course details
+        const course = await Course.findByPk(courseId);
+
+        if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+
+        // Fetch exams
+        const exams = await Exam.findAll({
+            where: { course_course_id: courseId },
+        });
+
+        if (!exams) {
+            return res.status(404).json({ error: 'Exams not found' });
+        }
+
+        // get the student id from the token
+        const stu_id = req.user.studentId;
+
+        // Fetch exams
+        const examStudentEntries = await ExamStudent.findAll({
+            where: { student_stu_id: stu_id },
+        });
+
+        if (!examStudentEntries) {
+            return res.status(404).json({ error: 'Exams not found' });
+        }
+
+        // get all the exam ids that the student has appeared in
+        var examIds = [];
+        for (var i = 0; i < examStudentEntries.length; i++) {
+            examIds.push(examStudentEntries[i].exam_exam_id);
+        }
+
+        //console.log(examIds);
+
+        // remove all the exams that the student has not appeared in
+        var examsAppeared = [];
+        for (var i = 0; i < exams.length; i++) {
+            if (examIds.includes(exams[i].exam_id)) {
+                examsAppeared.push(exams[i]);
+            }
+        }
+
+        //console.log(examsAppeared);
+        res.status(200).json({ examsAppeared });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+exports.getMarksOfExam = async (req, res) => {
+    try {
+        const { examId } = req.params;
+
+        // Fetch exam details
+        const exam = await Exam.findByPk(examId);
+
+        if (!exam) {
+            return res.status(404).json({ error: 'Exam not found' });
+        }
+
+        // get the student id from the token
+        const stu_id = req.user.studentId;
+
+        // Fetch exams
+        const examStudentEntry = await ExamStudent.findOne({
+            where: { exam_exam_id: examId, student_stu_id: stu_id },
+        });
+
+        if (!examStudentEntry) {
+            return res.status(404).json({ error: 'Exam not found' });
+        }
+
+        console.log(examStudentEntry);
+        res.status(200).json({ examStudentEntry });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}

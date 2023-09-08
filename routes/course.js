@@ -37,4 +37,10 @@ router.get('/:courseId/exams/:examId/loadMcqExam', jwtAuthMiddleware, courseCont
 // route to submit the mcq answer
 router.post('/:courseId/exams/:examId/submitMcqAnswer', jwtAuthMiddleware, courseController.submitMcqExamAnswers);
 
+// route to get all the exams a student has appeared in under a course
+router.get('/:courseId/exams/taken', jwtAuthMiddleware, courseController.getAllExamsAppeared);
+
+// get marks of an exam of a student under a course
+router.get('/:courseId/exams/:examId/marks', jwtAuthMiddleware, courseController.getMarksOfExam);
+
 module.exports = router;
