@@ -42,7 +42,7 @@ exports.signin = async (req, res) => {
     // });
 
     token = jwt.sign({ studentId: student.stu_id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '168h',
     });
 
     // Send the student's information (along with the token) to the client

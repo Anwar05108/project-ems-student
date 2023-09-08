@@ -141,9 +141,11 @@ exports.getAllCoursesByQuery = async (req, res) => {
 
 exports.enrollStudentToCourse = async (req, res) => {
     try {
+
         // take course id from body
+        console.log("hello from enroll student to course");
         const  courseId  = req.body.courseId;
-        //console.log(req.body);
+        console.log(req.body);
         console.log(courseId);
         const studentId = req.user.studentId;
         // check if course exists
