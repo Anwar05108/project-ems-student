@@ -78,6 +78,7 @@ exports.submitExamAnswers = async (req, res) => {
     console.log('from token', stu_id);
     // const  stu_id  = req.session.studentId; // Assuming you have the student's ID from authentication middleware
     const obtainedMarks = score;
+    var final_score = 0;
 
     const examStudentEntry = await ExamStudent.findOne({
       where: { exam_exam_id: examId, student_stu_id: stu_id },
@@ -92,6 +93,7 @@ exports.submitExamAnswers = async (req, res) => {
       else{
         examStudentEntry.obtained_marks = obtainedMarks;
       }
+      final_score = examStudentEntry.obtained_marks;
         
       await examStudentEntry.save();
     } else {
@@ -101,11 +103,12 @@ exports.submitExamAnswers = async (req, res) => {
         student_stu_id: stu_id,
         obtained_marks: obtainedMarks,
       });
+      final_score = obtainedMarks;
     }
 
+    console.log('final score', final_score);
 
-
-    res.status(200).json({ score });
+    res.status(200).json({ final_score });
   } catch (err) {
     console.error('Error in submitting exam answers:', err);
     res.status(500).json({ error: 'Internal server error' });
