@@ -43,4 +43,7 @@ router.get('/:courseId/exams/taken', jwtAuthMiddleware, courseController.getAllE
 // get marks of an exam of a student under a course
 router.get('/:courseId/exams/:examId/marks', jwtAuthMiddleware, courseController.getMarksOfExam);
 
+// route to see if a student has submitted the exam or not
+router.get('/:courseId/exams/:examId/submitted', jwtAuthMiddleware, courseController.checkIfExamSubmitted);
+
 module.exports = router;
