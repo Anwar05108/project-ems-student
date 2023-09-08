@@ -3,6 +3,9 @@ const router = express.Router();
 const courseController = require('../controllers/courseController');
 const jwtAuthMiddleware = require('../middleware/jwtAuth');
 
+// route to deduct marks
+router.post('/:examId/deduct',jwtAuthMiddleware, examController.deductMarks);
+
 router.get('/getallEnrolledCourses', jwtAuthMiddleware, courseController.getAllEnrolledCourses);
 
 router.get('/getallCoursesbyclass', jwtAuthMiddleware, courseController.getAllCoursesByClass);

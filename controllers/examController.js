@@ -175,6 +175,37 @@ exports.submitWrittenExamAnswers = async (req, res) => {
   }
 }
 
+exports.deductMarks = async (req, res) => {
+  try{
+    const { examId } = req.params;
+    const marks = 2;
+    const stu_id = req.user.studentId;
+    const examStudentEntry = await ExamStudent.findOne({
+      where: { exam_exam_id: examId, student_stu_id: stu_id },
+    });
+    if (examStudentEntry) {
+      // If the entry already exists, update the obtained_marks value
+      examStudentEntry.obtained_marks = 0 - marks;
+      await examStudentEntry.save();
+    }
+    else {
+      // If the entry does not exist, create a new entry
+      await ExamStudent.create({
+        exam_exam_id: examId,
+        student_stu_id: stu_id,
+        obtained_marks: 0 - marks,
+      });
+    }
+    res.status(200).json({ message: 'Marks deducted successfully' });
+  }
+  catch (err) {
+    console.error('Error in deducting marks:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+
+    
+  }
+
 
 
 
