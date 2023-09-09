@@ -222,21 +222,102 @@ exports.getallExamsbyCoursesEnrolled = async (req, res) => {
 
   // get the student id from the token
   const stu_id = req.user.studentId;
+  console.log('from token', stu_id);
   // get all enrolled courses of the student from db
   const courses = await StudentCourse.findAll({
     where: { student_stu_id: stu_id },
   });
+  // console.log(courses);
 
   const courseIds = courses.map((entry) => entry.course_course_id);
-
+  console.log(courseIds);
   // fetch all the exam details which are associated with the courses
   const exams = await Exam.findAll({
     where: { course_course_id: courseIds },
   });
+  console.log(exams);
 
 
   res.status(200).json({ exams });
 }
+
+exports.getStatistics = async (req, res) => {
+
+  // get the student id from the token
+  const stu_id = req.user.studentId;
+  console.log('from token', stu_id);
+  // get all the entries that the student has in exam_student table
+  const examStudentEntries = await ExamStudent.findAll({
+    where: { student_stu_id: stu_id },
+  });
+
+  // kepp the obtainedMarks from the examStudentEntries
+  const obtainedMarks = examStudentEntries.map((entry) => entry.obtained_marks);
+
+
+
+  // now get the exam ids from the exam_student table
+  const examIds = examStudentEntries.map((entry) => entry.exam_exam_id);
+
+  // now get the highest marks from the exam_student table for each examId
+  const highestMarksEachExam = await Promise.all(
+    examIds.map(async (entry) => {
+      const examStudentEntries = await ExamStudent.findAll({
+        where: { exam_exam_id: entry },
+      });
+      const obtainedMarks = examStudentEntries.map((entry) => entry.obtained_marks);
+      console.log(obtainedMarks);
+      const highestMarks = Math.max(...obtainedMarks);
+      console.log(highestMarks);
+      return highestMarks;
+    })
+  );
+  
+  console.log("highestMarks");
+  console.log(highestMarksEachExam);
+  // now get the exam details from the exam table
+  const exams = await Exam.findAll({
+    where: { exam_id: examIds },
+  });
+
+  // from the exams keep exam name and exam id
+  const examDetails = exams.map((entry) => {
+    return {
+      exam_id: entry.exam_id,
+      exam_name: entry.name,
+      total_marks: entry.total_marks,
+    }
+  });
+
+  // now create a object with exam details and obtained marks
+  const examDetailsWithMarks = examDetails.map((entry, index) => {
+    return {
+      exam_id: entry.exam_id,
+      exam_name: entry.exam_name,
+      total_marks: entry.total_marks,
+      obtained_marks: obtainedMarks[index],
+    }
+  });
+
+
+  // now create a object with exam details and obtained marks and highest marks
+  const examDetailsWithMarksAndHighestMarks = examDetailsWithMarks.map((entry, index) => {
+    return {
+      exam_id: entry.exam_id,
+      exam_name: entry.exam_name,
+      total_marks: entry.total_marks,
+      obtained_marks: obtainedMarks[index],
+      highest_marks: highestMarksEachExam[index],
+    }
+  }
+  );
+
+  res.status(200).json({ examDetailsWithMarksAndHighestMarks });
+}
+
+
+
+
 
  
 
