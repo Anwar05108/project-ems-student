@@ -4,6 +4,7 @@ const Question = require('../models/question');
 const QuestionExam = require('../models/question_exam');
 const ExamStudent = require('../models/exam_student');
 const QuestionAnswer = require('../models/question_answer');
+const StudentCourse = require('../models/student_course');
 
 exports.getExamDetails = async (req, res) => {
   try {
@@ -87,14 +88,14 @@ exports.submitExamAnswers = async (req, res) => {
     if (examStudentEntry) {
       // If the entry already exists, update the obtained_marks value
       // check if the marks is negative then add with the obtained marks
-      if(examStudentEntry.obtained_marks < 0){
+      if (examStudentEntry.obtained_marks < 0) {
         examStudentEntry.obtained_marks = examStudentEntry.obtained_marks + obtainedMarks;
       }
-      else{
+      else {
         examStudentEntry.obtained_marks = obtainedMarks;
       }
       final_score = examStudentEntry.obtained_marks;
-        
+
       await examStudentEntry.save();
     } else {
       // If the entry does not exist, create a new entry
@@ -152,10 +153,10 @@ exports.submitWrittenExamAnswers = async (req, res) => {
   // create a entry with exam id and student id and answer_script_url in exam_student table
   // get the student id from the token
   const stu_id = req.user.studentId;
-  const { examId }  = req.params;
+  const { examId } = req.params;
   console.log(examId)
 
-  const answerScriptUrl  = req.body.answer_script_url;
+  const answerScriptUrl = req.body.answer_script_url;
   console.log(stu_id);
   console.log(answerScriptUrl);
   try {
@@ -186,7 +187,7 @@ exports.submitWrittenExamAnswers = async (req, res) => {
 }
 
 exports.deductMarks = async (req, res) => {
-  try{
+  try {
     const { examId } = req.params;
     const marks = 2;
     const stu_id = req.user.studentId;
@@ -214,8 +215,30 @@ exports.deductMarks = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 
-    
-  }
+
+}
+
+exports.getallExamsbyCoursesEnrolled = async (req, res) => {
+
+  // get the student id from the token
+  const stu_id = req.user.studentId;
+  // get all enrolled courses of the student from db
+  const courses = await StudentCourse.findAll({
+    where: { student_stu_id: stu_id },
+  });
+
+  const courseIds = courses.map((entry) => entry.course_course_id);
+
+  // fetch all the exam details which are associated with the courses
+  const exams = await Exam.findAll({
+    where: { course_course_id: courseIds },
+  });
+
+
+  res.status(200).json({ exams });
+}
+
+ 
 
 
 
