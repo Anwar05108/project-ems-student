@@ -606,6 +606,10 @@ exports.giveRating = async (req, res) => {
             return res.status(404).json({ error: 'Student course entry not found' });
         }
 
+        // check if the student has already given a rating
+        if (studentCourseEntry.rating !== 0) {
+            return res.status(200).json({ message: 'Student has already given a rating' });
+        }
         studentCourseEntry.rating = rating;
         await studentCourseEntry.save();
 
