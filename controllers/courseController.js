@@ -581,3 +581,49 @@ exports.checkIfExamSubmitted = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+exports.giveRating = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const { rating } = req.body;
+
+        // get the student id from the token
+        const stu_id = req.user.studentId;
+
+        // Fetch course details
+        const course = await Course.findByPk(courseId);
+
+        if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+
+        // Fetch student course entry
+        const studentCourseEntry = await StudentCourse.findOne({
+            where: { student_stu_id: stu_id, course_course_id: courseId },
+        });
+
+        if (!studentCourseEntry) {
+            return res.status(404).json({ error: 'Student course entry not found' });
+        }
+
+        studentCourseEntry.rating = rating;
+        await studentCourseEntry.save();
+
+        // Now update the rating of the course in the course table
+        const prevRating = course.rating;
+        const prevNumRatings = course.num_ratings;
+
+        const newRating = (prevRating * prevNumRatings + rating) / (prevNumRatings + 1);
+        course.rating = newRating;
+        course.num_ratings = prevNumRatings + 1;
+        await course.save();
+
+
+
+
+
+        res.status(200).json({ message: 'Rating saved successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}

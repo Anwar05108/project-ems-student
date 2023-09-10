@@ -18,5 +18,6 @@ router.post('/written/:examId/submit', jwtAuthMiddleware, examController.submitW
 
 router.get('/getallExamsbyCoursesEnrolled', jwtAuthMiddleware, examController.getallExamsbyCoursesEnrolled);
 
+router.get('/getStatistics', jwtAuthMiddleware, examController.getStatistics);
 
 module.exports = router;

@@ -46,4 +46,6 @@ router.get('/:courseId/exams/:examId/marks', jwtAuthMiddleware, courseController
 // route to see if a student has submitted the exam or not
 router.get('/:courseId/exams/:examId/submitted', jwtAuthMiddleware, courseController.checkIfExamSubmitted);
 
+router.post('/:courseId/giveRating', jwtAuthMiddleware, courseController.giveRating);
+
 module.exports = router;

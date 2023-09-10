@@ -26,6 +26,14 @@ QuestionAnswer.init(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        isChecked: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        comment: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     },
     {
         sequelize,
