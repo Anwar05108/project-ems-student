@@ -8,6 +8,7 @@ const examRouter = require('./routes/exam'); // Import the exam routes
 const courseRouter = require('./routes/course');
 const sequelize = require('./config/database');
 const session = require('express-session');
+const studentRouter = require('./routes/student');
 
 const corsOptions = {
   origin: 'http://localhost:3000', // Replace with your frontend's origin
@@ -58,6 +59,7 @@ app.use('/api/student/exam', examRouter); // Use the exam routes
 
 app.use('/api/student/courses',courseRouter);
 // Other routes and middleware...
+app.use('/api/student', studentRouter);
 
 const port = process.env.PORT || 3001;
 sequelize.sync().then(() => {

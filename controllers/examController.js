@@ -5,6 +5,7 @@ const QuestionExam = require('../models/question_exam');
 const ExamStudent = require('../models/exam_student');
 const QuestionAnswer = require('../models/question_answer');
 const StudentCourse = require('../models/student_course');
+const Course = require('../models/course');
 
 exports.getExamDetails = async (req, res) => {
   try {
@@ -284,8 +285,32 @@ exports.getStatistics = async (req, res) => {
       exam_id: entry.exam_id,
       exam_name: entry.name,
       total_marks: entry.total_marks,
+      course_id: entry.course_course_id,
     }
   });
+
+  // get the name of the course from the course table
+  const courseIds = examDetails.map((entry) => entry.course_id);
+  const courses = await Course.findAll({
+    where: { course_id: courseIds },
+  });
+
+  // from the courses keep course name and course id
+  const courseDetails = courses.map((entry) => {
+    return {
+      course_id: entry.course_id,
+      course_name: entry.name,
+    }
+  });
+
+  // now add the course name to the exam details
+  examDetails.forEach((entry, index) => {
+    const courseName = courseDetails.find((course) => course.course_id === entry.course_id).course_name;
+    examDetails[index].course_name = courseName;
+  });
+
+  console.log(examDetails);
+  
 
   // now create a object with exam details and obtained marks
   const examDetailsWithMarks = examDetails.map((entry, index) => {
@@ -294,6 +319,7 @@ exports.getStatistics = async (req, res) => {
       exam_name: entry.exam_name,
       total_marks: entry.total_marks,
       obtained_marks: obtainedMarks[index],
+      course_name: entry.course_name,
     }
   });
 
@@ -306,6 +332,7 @@ exports.getStatistics = async (req, res) => {
       total_marks: entry.total_marks,
       obtained_marks: obtainedMarks[index],
       highest_marks: highestMarksEachExam[index],
+      course_name: entry.course_name,
     }
   }
   );
